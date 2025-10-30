@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   RefreshControl,
-  TouchableOpacity,
 } from 'react-native';
 import {useAuth} from '../context/AuthContext';
 import {attendanceService, salaryService} from '../services/api';
@@ -21,6 +20,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchData = async () => {

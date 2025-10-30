@@ -11,7 +11,7 @@ import {useAuth} from '../context/AuthContext';
 import {attendanceService} from '../services/api';
 import {Attendance} from '../types';
 
-const CheckInOutScreen = ({navigation}: any) => {
+const CheckInOutScreen = () => {
   const {user} = useAuth();
   const [todayAttendance, setTodayAttendance] = useState<Attendance | null>(
     null,
@@ -25,6 +25,7 @@ const CheckInOutScreen = ({navigation}: any) => {
       setCurrentTime(new Date());
     }, 1000);
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchTodayAttendance = async () => {

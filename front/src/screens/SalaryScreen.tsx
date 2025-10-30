@@ -19,6 +19,7 @@ const SalaryScreen = () => {
 
   useEffect(() => {
     fetchSalary();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchSalary = async () => {
