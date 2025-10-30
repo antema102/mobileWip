@@ -1,0 +1,11 @@
+firstName,lastName,email,employeeId,address,age,position,department,baseSalary,hourlyRate,role,password
+Jean,Dupont,jean.dupont@example.com,EMP001,"123 Rue de la Paix, 75001 Paris",30,Développeur Senior,IT,3500,17.5,employee,changeme123
+Marie,Martin,marie.martin@example.com,EMP002,"456 Avenue des Champs-Élysées, 75008 Paris",28,Designer UI/UX,Design,3200,16,employee,changeme123
+Pierre,Bernard,pierre.bernard@example.com,EMP003,"789 Boulevard Saint-Germain, 75006 Paris",35,Chef de Projet,Management,4500,22.5,manager,changeme123
+Sophie,Dubois,sophie.dubois@example.com,EMP004,"321 Rue de Rivoli, 75001 Paris",26,Développeur Junior,IT,2800,14,employee,changeme123
+Lucas,Thomas,lucas.thomas@example.com,EMP005,"654 Avenue Montaigne, 75008 Paris",32,Responsable RH,RH,3800,19,manager,changeme123
+Emma,Robert,emma.robert@example.com,EMP006,"987 Rue du Faubourg Saint-Honoré, 75008 Paris",29,Comptable,Finance,3300,16.5,employee,changeme123
+Antoine,Richard,antoine.richard@example.com,EMP007,"147 Boulevard Haussmann, 75008 Paris",31,Marketing Manager,Marketing,3900,19.5,manager,changeme123
+Camille,Petit,camille.petit@example.com,EMP008,"258 Rue de la République, 69002 Lyon",27,Développeur Full Stack,IT,3100,15.5,employee,changeme123
+Hugo,Durand,hugo.durand@example.com,EMP009,"369 Avenue Jean Jaurès, 69007 Lyon",33,Architecte Logiciel,IT,4200,21,employee,changeme123
+Léa,Leroy,lea.leroy@example.com,EMP010,"741 Rue Victor Hugo, 69002 Lyon",25,Assistante RH,RH,2600,13,employee,changeme123
