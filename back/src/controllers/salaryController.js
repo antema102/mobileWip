@@ -1,6 +1,7 @@
 const Salary = require('../models/Salary');
 const Attendance = require('../models/Attendance');
 const User = require('../models/User');
+const { formatDate } = require('../utils/dateHelpers');
 
 // @desc    Calculate and generate salary for a user
 // @route   POST /api/salary/calculate
@@ -16,8 +17,8 @@ const calculateSalary = async (req, res) => {
     }
 
     // Get attendance records for the period
-    const startDate = new Date(year, month - 1, 1).toISOString().split('T')[0];
-    const endDate = new Date(year, month, 0).toISOString().split('T')[0];
+    const startDate = formatDate(new Date(year, month - 1, 1));
+    const endDate = formatDate(new Date(year, month, 0));
 
     const attendanceRecords = await Attendance.find({
       user: userId,

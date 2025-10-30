@@ -1,5 +1,6 @@
 const Attendance = require('../models/Attendance');
 const User = require('../models/User');
+const { getTodayDate } = require('../utils/dateHelpers');
 
 // @desc    Check in
 // @route   POST /api/attendance/checkin
@@ -7,7 +8,7 @@ const User = require('../models/User');
 const checkIn = async (req, res) => {
   try {
     const { userId, method, location, faceDescriptor } = req.body;
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayDate();
 
     // Check if user already checked in today
     const existingAttendance = await Attendance.findOne({
@@ -51,7 +52,7 @@ const checkIn = async (req, res) => {
 const checkOut = async (req, res) => {
   try {
     const { userId, method, location } = req.body;
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayDate();
 
     const attendance = await Attendance.findOne({
       user: userId,
@@ -128,7 +129,7 @@ const getAllAttendance = async (req, res) => {
 const getTodayAttendance = async (req, res) => {
   try {
     const { userId } = req.params;
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayDate();
 
     const attendance = await Attendance.findOne({
       user: userId,
