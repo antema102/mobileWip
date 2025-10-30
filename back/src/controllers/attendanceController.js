@@ -1,13 +1,22 @@
 const Attendance = require('../models/Attendance');
 const User = require('../models/User');
 
+// Helper function to get today's date in YYYY-MM-DD format (local time)
+const getTodayDate = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 // @desc    Check in
 // @route   POST /api/attendance/checkin
 // @access  Private
 const checkIn = async (req, res) => {
   try {
     const { userId, method, location, faceDescriptor } = req.body;
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayDate();
 
     // Check if user already checked in today
     const existingAttendance = await Attendance.findOne({
@@ -51,7 +60,7 @@ const checkIn = async (req, res) => {
 const checkOut = async (req, res) => {
   try {
     const { userId, method, location } = req.body;
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayDate();
 
     const attendance = await Attendance.findOne({
       user: userId,
@@ -128,7 +137,7 @@ const getAllAttendance = async (req, res) => {
 const getTodayAttendance = async (req, res) => {
   try {
     const { userId } = req.params;
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayDate();
 
     const attendance = await Attendance.findOne({
       user: userId,
