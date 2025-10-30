@@ -1,7 +1,7 @@
-import React, {createContext, useState, useContext, useEffect} from 'react';
-import {authService} from '../services/api';
-import {storage} from '../utils/storage';
-import {User, AuthResponse} from '../types';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { authService } from '../services/api';
+import { storage } from '../utils/storage';
+import { User, AuthResponse } from '../types';
 
 interface AuthContextData {
   user: User | null;
@@ -15,7 +15,7 @@ interface AuthContextData {
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -83,7 +83,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
 
   return (
     <AuthContext.Provider
-      value={{user, token, loading, login, register, logout, updateUser}}>
+      value={{ user, token, loading, login, register, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

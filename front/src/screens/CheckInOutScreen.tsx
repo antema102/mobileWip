@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,12 +7,12 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import {useAuth} from '../context/AuthContext';
-import {attendanceService} from '../services/api';
-import {Attendance} from '../types';
+import { useAuth } from '../context/AuthContext';
+import { attendanceService } from '../services/api';
+import { Attendance } from '../types';
 
 const CheckInOutScreen = () => {
-  const {user} = useAuth();
+  const { user } = useAuth();
   const [todayAttendance, setTodayAttendance] = useState<Attendance | null>(
     null,
   );
@@ -45,7 +45,7 @@ const CheckInOutScreen = () => {
       'Pointage d\'entrée',
       'Voulez-vous pointer votre arrivée ?',
       [
-        {text: 'Annuler', style: 'cancel'},
+        { text: 'Annuler', style: 'cancel' },
         {
           text: 'Confirmer',
           onPress: async () => {
@@ -78,7 +78,7 @@ const CheckInOutScreen = () => {
       'Pointage de sortie',
       'Voulez-vous pointer votre départ ?',
       [
-        {text: 'Annuler', style: 'cancel'},
+        { text: 'Annuler', style: 'cancel' },
         {
           text: 'Confirmer',
           onPress: async () => {
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 30,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     minHeight: 120,
     justifyContent: 'center',
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,

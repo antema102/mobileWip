@@ -21,6 +21,8 @@ export interface AuthResponse {
   employeeId: string;
   role: string;
   token: string;
+  department: string;
+  position: string;
 }
 
 export interface Attendance {

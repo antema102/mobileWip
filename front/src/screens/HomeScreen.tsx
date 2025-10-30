@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,12 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
-import {useAuth} from '../context/AuthContext';
-import {attendanceService, salaryService} from '../services/api';
-import {Attendance, Salary} from '../types';
+import { useAuth } from '../context/AuthContext';
+import { attendanceService, salaryService } from '../services/api';
+import { Attendance, Salary } from '../types';
 
 const HomeScreen = () => {
-  const {user} = useAuth();
+  const { user } = useAuth();
   const [todayAttendance, setTodayAttendance] = useState<Attendance | null>(
     null,
   );
@@ -124,13 +124,13 @@ const HomeScreen = () => {
             <View style={styles.row}>
               <Text style={styles.label}>Salaire brut:</Text>
               <Text style={styles.value}>
-                {currentSalary.grossSalary.toFixed(2)}€
+                {currentSalary.grossSalary?.toFixed(2)}€
               </Text>
             </View>
             <View style={styles.row}>
               <Text style={styles.label}>Salaire net:</Text>
               <Text style={[styles.value, styles.netSalary]}>
-                {currentSalary.netSalary.toFixed(2)}€
+                {currentSalary.netSalary?.toFixed(2)}€
               </Text>
             </View>
           </View>
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
