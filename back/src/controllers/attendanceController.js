@@ -2,6 +2,8 @@ const Attendance = require('../models/Attendance');
 const User = require('../models/User');
 
 // Helper function to get today's date in YYYY-MM-DD format (local time)
+// This ensures consistent date comparison across check-in and check-out operations
+// Using toISOString() would convert to UTC, causing issues when local date differs from UTC date
 const getTodayDate = () => {
   const date = new Date();
   const year = date.getFullYear();
