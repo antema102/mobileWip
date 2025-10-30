@@ -1,17 +1,27 @@
-const User = require('../models/User');
-const generateToken = require('../utils/generateToken');
+const User = require("../models/User");
+const generateToken = require("../utils/generateToken");
 
 // @desc    Register user
 // @route   POST /api/auth/register
 // @access  Public
 const register = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, employeeId, hourlyRate, department, position, role } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      employeeId,
+      hourlyRate,
+      department,
+      position,
+      role,
+    } = req.body;
 
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: "User already exists" });
     }
 
     const user = await User.create({
@@ -23,7 +33,7 @@ const register = async (req, res) => {
       hourlyRate,
       department,
       position,
-      role
+      role,
     });
 
     if (user) {
@@ -34,10 +44,12 @@ const register = async (req, res) => {
         email: user.email,
         employeeId: user.employeeId,
         role: user.role,
-        token: generateToken(user._id)
+        department: user.department,
+        position: user.position,
+        token: generateToken(user._id),
       });
     } else {
-      res.status(400).json({ message: 'Invalid user data' });
+      res.status(400).json({ message: "Invalid user data" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -51,7 +63,7 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select("+password");
 
     if (user && (await user.matchPassword(password))) {
       res.json({
@@ -60,11 +72,13 @@ const login = async (req, res) => {
         lastName: user.lastName,
         email: user.email,
         employeeId: user.employeeId,
+        department: user.department,
+        position: user.position,
         role: user.role,
-        token: generateToken(user._id)
+        token: generateToken(user._id),
       });
     } else {
-      res.status(401).json({ message: 'Invalid email or password' });
+      res.status(401).json({ message: "Invalid email or password" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -86,5 +100,5 @@ const getMe = async (req, res) => {
 module.exports = {
   register,
   login,
-  getMe
+  getMe,
 };
