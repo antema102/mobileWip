@@ -142,10 +142,157 @@ const getTodayAttendance = async (req, res) => {
   }
 };
 
+// @desc    Manually correct attendance (for HR/Manager)
+// @route   PUT /api/attendance/:id/correct
+// @access  Private/Manager,Admin
+const correctAttendance = async (req, res) => {
+  try {
+    const { checkIn, checkOut, reason } = req.body;
+    const attendance = await Attendance.findById(req.params.id);
+
+    if (!attendance) {
+      return res.status(404).json({ message: 'Attendance record not found' });
+    }
+
+    // Store previous values for audit log
+    const previousValue = {
+      checkIn: attendance.checkIn,
+      checkOut: attendance.checkOut,
+      workHours: attendance.workHours
+    };
+
+    // Update attendance
+    if (checkIn) {
+      attendance.checkIn = new Date(checkIn);
+    }
+    if (checkOut) {
+      attendance.checkOut = new Date(checkOut);
+    }
+
+    await attendance.save();
+
+    // Create audit log
+    const AuditLog = require('../models/AuditLog');
+    await AuditLog.create({
+      action: 'attendance_correction',
+      performedBy: req.user._id,
+      targetUser: attendance.user,
+      targetAttendance: attendance._id,
+      description: reason || 'Manual attendance correction',
+      previousValue,
+      newValue: {
+        checkIn: attendance.checkIn,
+        checkOut: attendance.checkOut,
+        workHours: attendance.workHours
+      },
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent']
+    });
+
+    res.json({
+      message: 'Attendance corrected successfully',
+      attendance,
+      audit: {
+        correctedBy: req.user.firstName + ' ' + req.user.lastName,
+        correctedAt: new Date(),
+        reason
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Add manual attendance record (for HR/Manager)
+// @route   POST /api/attendance/manual
+// @access  Private/Manager,Admin
+const addManualAttendance = async (req, res) => {
+  try {
+    const { userId, date, checkIn, checkOut, reason } = req.body;
+
+    if (!userId || !date || !checkIn) {
+      return res.status(400).json({ 
+        message: 'userId, date, and checkIn time are required' 
+      });
+    }
+
+    // Check if attendance already exists for this date
+    const existingAttendance = await Attendance.findOne({
+      user: userId,
+      date
+    });
+
+    if (existingAttendance) {
+      return res.status(400).json({ 
+        message: 'Attendance record already exists for this date' 
+      });
+    }
+
+    // Create attendance record
+    const attendance = await Attendance.create({
+      user: userId,
+      checkIn: new Date(checkIn),
+      checkOut: checkOut ? new Date(checkOut) : null,
+      checkInMethod: 'manual',
+      checkOutMethod: checkOut ? 'manual' : null,
+      date,
+      status: checkOut ? 'completed' : 'active'
+    });
+
+    // Create audit log
+    const AuditLog = require('../models/AuditLog');
+    await AuditLog.create({
+      action: 'attendance_correction',
+      performedBy: req.user._id,
+      targetUser: userId,
+      targetAttendance: attendance._id,
+      description: reason || 'Manual attendance record added',
+      newValue: {
+        checkIn: attendance.checkIn,
+        checkOut: attendance.checkOut,
+        date: attendance.date
+      },
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent']
+    });
+
+    res.status(201).json({
+      message: 'Manual attendance record created successfully',
+      attendance
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get audit logs for attendance
+// @route   GET /api/attendance/:id/audit
+// @access  Private/Manager,Admin
+const getAttendanceAudit = async (req, res) => {
+  try {
+    const AuditLog = require('../models/AuditLog');
+    const logs = await AuditLog.find({ 
+      targetAttendance: req.params.id 
+    })
+      .populate('performedBy', 'firstName lastName email role')
+      .sort({ createdAt: -1 });
+
+    res.json(logs);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   checkIn,
   checkOut,
   getUserAttendance,
   getAllAttendance,
-  getTodayAttendance
+  getTodayAttendance,
+  correctAttendance,
+  addManualAttendance,
+  getAttendanceAudit
 };

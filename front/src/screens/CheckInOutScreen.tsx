@@ -38,12 +38,17 @@ const CheckInOutScreen = () => {
     }
   };
 
-  const handleCheckIn = async () => {
+  // Simplified single-button handler as per cahier des charges
+  const handlePointer = async () => {
     if (!user) return;
 
+    const isCheckIn = !todayAttendance || todayAttendance.checkOut;
+    const action = isCheckIn ? 'arrivée' : 'départ';
+    const actionCapitalized = isCheckIn ? 'Arrivée' : 'Départ';
+
     Alert.alert(
-      'Pointage d\'entrée',
-      'Voulez-vous pointer votre arrivée ?',
+      `Pointage ${action}`,
+      `Voulez-vous pointer votre ${action} ?`,
       [
         { text: 'Annuler', style: 'cancel' },
         {
@@ -51,44 +56,30 @@ const CheckInOutScreen = () => {
           onPress: async () => {
             setLoading(true);
             try {
-              await attendanceService.checkIn({
-                userId: user._id,
-                method: 'manual',
+              if (isCheckIn) {
+                await attendanceService.checkIn({
+                  userId: user._id,
+                  method: 'manual', // Will be 'facial' when camera is integrated
+                });
+              } else {
+                await attendanceService.checkOut({
+                  userId: user._id,
+                  method: 'manual',
+                });
+              }
+              
+              // Personalized confirmation message with employee name and time
+              const userName = `${user.firstName} ${user.lastName}`;
+              const time = new Date().toLocaleTimeString('fr-FR', {
+                hour: '2-digit',
+                minute: '2-digit',
               });
-              Alert.alert('Succès', 'Pointage d\'entrée enregistré');
-              await fetchTodayAttendance();
-            } catch (error: any) {
+              
               Alert.alert(
-                'Erreur',
-                error.response?.data?.message || 'Erreur lors du pointage',
+                'Pointage réussi',
+                `${userName}\nHeure ${action === 'arrivée' ? 'd\'arrivée' : 'de départ'}: ${time}`,
               );
-            } finally {
-              setLoading(false);
-            }
-          },
-        },
-      ],
-    );
-  };
-
-  const handleCheckOut = async () => {
-    if (!user) return;
-
-    Alert.alert(
-      'Pointage de sortie',
-      'Voulez-vous pointer votre départ ?',
-      [
-        { text: 'Annuler', style: 'cancel' },
-        {
-          text: 'Confirmer',
-          onPress: async () => {
-            setLoading(true);
-            try {
-              await attendanceService.checkOut({
-                userId: user._id,
-                method: 'manual',
-              });
-              Alert.alert('Succès', 'Pointage de sortie enregistré');
+              
               await fetchTodayAttendance();
             } catch (error: any) {
               Alert.alert(
@@ -127,14 +118,44 @@ const CheckInOutScreen = () => {
 
   const isCheckedIn = todayAttendance && !todayAttendance.checkOut;
   const isCheckedOut = todayAttendance && todayAttendance.checkOut;
+  const canPoint = !isCheckedOut;
+
+  // Determine button text and action based on current status
+  const getButtonText = () => {
+    if (!todayAttendance || todayAttendance.checkOut) {
+      return 'Pointer'; // Single button for check-in
+    }
+    return 'Pointer'; // Same button for check-out
+  };
+
+  const getButtonColor = () => {
+    if (!todayAttendance || todayAttendance.checkOut) {
+      return '#4CAF50'; // Green for check-in
+    }
+    return '#FF5722'; // Red for check-out
+  };
 
   return (
     <View style={styles.container}>
+      {/* Real-time clock display */}
       <View style={styles.clockContainer}>
         <Text style={styles.date}>{formatCurrentDate()}</Text>
         <Text style={styles.time}>{formatCurrentTime()}</Text>
       </View>
 
+      {/* Employee info */}
+      {user && (
+        <View style={styles.userInfoContainer}>
+          <Text style={styles.userName}>
+            {user.firstName} {user.lastName}
+          </Text>
+          <Text style={styles.userPosition}>
+            {user.employeeId} • {user.position || 'Employé'}
+          </Text>
+        </View>
+      )}
+
+      {/* Status display */}
       <View style={styles.statusContainer}>
         {!todayAttendance && (
           <Text style={styles.statusText}>Aucun pointage aujourd'hui</Text>
@@ -172,45 +193,36 @@ const CheckInOutScreen = () => {
         )}
       </View>
 
+      {/* Simplified single button as per cahier des charges */}
       <View style={styles.buttonContainer}>
-        {!todayAttendance && (
+        {canPoint && (
           <TouchableOpacity
-            style={[styles.button, styles.checkInButton]}
-            onPress={handleCheckIn}
+            style={[styles.button, { backgroundColor: getButtonColor() }]}
+            onPress={handlePointer}
             disabled={loading}>
             {loading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color="#fff" size="large" />
             ) : (
-              <Text style={styles.buttonText}>Pointer l'arrivée</Text>
-            )}
-          </TouchableOpacity>
-        )}
-
-        {isCheckedIn && (
-          <TouchableOpacity
-            style={[styles.button, styles.checkOutButton]}
-            onPress={handleCheckOut}
-            disabled={loading}>
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>Pointer le départ</Text>
+              <Text style={styles.buttonText}>{getButtonText()}</Text>
             )}
           </TouchableOpacity>
         )}
 
         {isCheckedOut && (
-          <Text style={styles.completedText}>
-            Pointage terminé pour aujourd'hui
-          </Text>
+          <View style={styles.completedContainer}>
+            <Text style={styles.completedText}>
+              ✓ Pointage terminé pour aujourd'hui
+            </Text>
+          </View>
         )}
       </View>
 
+      {/* Information box */}
       <View style={styles.infoBox}>
-        <Text style={styles.infoTitle}>Information</Text>
+        <Text style={styles.infoTitle}>ℹ️ Information</Text>
         <Text style={styles.infoText}>
-          Utilisez la reconnaissance faciale pour un pointage plus sécurisé
-          (fonctionnalité à venir).
+          Le système détecte automatiquement s'il s'agit d'une arrivée ou d'un départ.
+          {'\n'}La reconnaissance faciale sera activée prochainement pour plus de sécurité.
         </Text>
       </View>
     </View>
@@ -228,7 +240,7 @@ const styles = StyleSheet.create({
     padding: 30,
     borderRadius: 15,
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -245,6 +257,28 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#007AFF',
     marginTop: 10,
+  },
+  userInfoContainer: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 15,
+    alignItems: 'center',
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  userName: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 5,
+  },
+  userPosition: {
+    fontSize: 14,
+    color: '#666',
   },
   statusContainer: {
     backgroundColor: '#fff',
@@ -289,20 +323,25 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    padding: 20,
+    padding: 25,
     borderRadius: 15,
     alignItems: 'center',
-  },
-  checkInButton: {
-    backgroundColor: '#4CAF50',
-  },
-  checkOutButton: {
-    backgroundColor: '#FF5722',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
+  },
+  completedContainer: {
+    backgroundColor: '#E8F5E9',
+    padding: 20,
+    borderRadius: 15,
+    alignItems: 'center',
   },
   completedText: {
     fontSize: 18,
@@ -326,6 +365,7 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 14,
     color: '#555',
+    lineHeight: 20,
   },
 });
 

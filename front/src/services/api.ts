@@ -63,6 +63,11 @@ export const authService = {
 };
 
 export const userService = {
+  async getAllUsers(): Promise<User[]> {
+    const response = await api.get(ENDPOINTS.USERS);
+    return response.data;
+  },
+
   async getUsers(): Promise<User[]> {
     const response = await api.get(ENDPOINTS.USERS);
     return response.data;
