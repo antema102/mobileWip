@@ -119,6 +119,17 @@ npm run android  # Pour Android
 npm run ios      # Pour iOS
 ```
 
+## Création d'un Compte Administrateur
+
+Pour créer votre premier compte administrateur :
+
+```bash
+cd back
+node scripts/createAdmin.js
+```
+
+Le script vous guidera à travers la création d'un compte admin de manière sécurisée. Pour plus de détails, consultez le [Guide de Création de Compte Administrateur](ADMIN_ACCOUNT.md).
+
 ## Endpoints API Principaux
 
 ### Authentication
