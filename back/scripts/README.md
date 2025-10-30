@@ -56,4 +56,4 @@ Admin Details:
 ✓ Database connection closed
 ```
 
-Pour plus d'informations, consultez le [Guide de Création de Compte Administrateur](../../ADMIN_ACCOUNT.md).
+Pour plus d'informations, consultez le [Guide de Création de Compte Administrateur](../../ADMIN_ACCOUNT.md) à la racine du projet.
