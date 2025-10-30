@@ -69,6 +69,18 @@ npm run dev
 npm start
 ```
 
+## Création d'un Compte Administrateur
+
+Pour créer votre premier compte administrateur, utilisez le script dédié :
+
+```bash
+node scripts/createAdmin.js
+```
+
+**Note importante** : Pour des raisons de sécurité, l'endpoint public `/api/auth/register` ne permet de créer que des comptes de type "employee". Les comptes admin doivent être créés via le script `createAdmin.js`.
+
+Pour plus de détails, consultez le [Guide de Création de Compte Administrateur](../ADMIN_ACCOUNT.md).
+
 ## Endpoints API
 
 ### Authentication

@@ -14,6 +14,10 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
+    // Prevent self-registration as admin or manager
+    // Only 'employee' role is allowed for public registration
+    const userRole = (role === 'admin' || role === 'manager') ? 'employee' : role;
+
     const user = await User.create({
       firstName,
       lastName,
@@ -23,7 +27,7 @@ const register = async (req, res) => {
       hourlyRate,
       department,
       position,
-      role
+      role: userRole || 'employee'
     });
 
     if (user) {

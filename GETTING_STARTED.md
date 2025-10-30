@@ -119,9 +119,26 @@ npm run ios      # Pour iOS
 
 ## Fonctionnalités Administrateur
 
+### Créer un Compte Administrateur
+
+Pour créer un compte avec le rôle **admin**, utilisez le script dédié :
+
+```bash
+cd back
+node scripts/createAdmin.js
+```
+
+Le script vous demandera les informations nécessaires (nom, email, mot de passe, etc.) et créera un compte admin de manière sécurisée.
+
+**Important** : Pour des raisons de sécurité, vous ne pouvez pas créer de compte admin via l'endpoint de registration public. Seul le script `createAdmin.js` permet de créer des comptes administrateurs.
+
+Pour plus de détails, consultez le [Guide de Création de Compte Administrateur](ADMIN_ACCOUNT.md).
+
+### Utiliser les Fonctionnalités Admin
+
 Si vous avez le rôle **admin** ou **manager**, vous avez accès à :
 
-### Via l'API
+#### Via l'API
 
 ```bash
 # Obtenir tous les utilisateurs
