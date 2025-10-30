@@ -40,9 +40,13 @@ const updateUser = async (req, res) => {
       user.firstName = req.body.firstName || user.firstName;
       user.lastName = req.body.lastName || user.lastName;
       user.email = req.body.email || user.email;
+      user.address = req.body.address !== undefined ? req.body.address : user.address;
+      user.age = req.body.age !== undefined ? req.body.age : user.age;
       user.department = req.body.department || user.department;
       user.position = req.body.position || user.position;
+      user.baseSalary = req.body.baseSalary !== undefined ? req.body.baseSalary : user.baseSalary;
       user.hourlyRate = req.body.hourlyRate || user.hourlyRate;
+      user.photoUrl = req.body.photoUrl !== undefined ? req.body.photoUrl : user.photoUrl;
 
       if (req.body.password) {
         user.password = req.body.password;

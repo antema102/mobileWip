@@ -35,6 +35,19 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: true
   },
+  address: {
+    type: String,
+    trim: true
+  },
+  age: {
+    type: Number,
+    min: 18,
+    max: 100
+  },
+  baseSalary: {
+    type: Number,
+    default: 0
+  },
   hourlyRate: {
     type: Number,
     required: [true, 'Hourly rate is required'],
@@ -45,6 +58,10 @@ const userSchema = new mongoose.Schema({
     trim: true
   },
   position: {
+    type: String,
+    trim: true
+  },
+  photoUrl: {
     type: String,
     trim: true
   },

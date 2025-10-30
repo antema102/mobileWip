@@ -5,11 +5,13 @@ const {
   getUserSalary,
   getAllSalaries,
   updateSalaryStatus,
-  getCurrentMonthSalary
+  getCurrentMonthSalary,
+  calculateProRataSalary
 } = require('../controllers/salaryController');
 const { protect, authorize } = require('../middleware/auth');
 
 router.post('/calculate', protect, authorize('admin', 'manager'), calculateSalary);
+router.post('/calculate-prorata', protect, authorize('admin', 'manager'), calculateProRataSalary);
 router.get('/user/:userId', protect, getUserSalary);
 router.get('/current/:userId', protect, getCurrentMonthSalary);
 router.get('/', protect, authorize('admin', 'manager'), getAllSalaries);

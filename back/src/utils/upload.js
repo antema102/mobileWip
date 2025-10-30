@@ -11,8 +11,8 @@ const storage = multer.diskStorage({
   }
 });
 
-// File filter
-const fileFilter = (req, file, cb) => {
+// File filter for images
+const imageFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = allowedTypes.test(file.mimetype);
@@ -24,10 +24,30 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({
+// File filter for CSV/Excel
+const csvExcelFilter = (req, file, cb) => {
+  const allowedTypes = /csv|xlsx|xls/;
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  
+  if (extname) {
+    return cb(null, true);
+  } else {
+    cb(new Error('Only CSV or Excel files are allowed'));
+  }
+};
+
+// Upload for images
+const uploadImage = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
-  fileFilter: fileFilter
+  fileFilter: imageFilter
 });
 
-module.exports = upload;
+// Upload for CSV/Excel files
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  fileFilter: csvExcelFilter
+});
+
+module.exports = { upload, uploadImage };
