@@ -90,8 +90,9 @@ axios.post('http://localhost:3000/api/users/import', form, {
    - Rôles valides: `employee`, `manager`, `admin`
 
 3. **Mot de Passe**:
-   - Si non fourni, le mot de passe par défaut sera `changeme123`
-   - Les employés doivent changer leur mot de passe à la première connexion
+   - Si non fourni, le mot de passe par défaut sera `TempPass2025!`
+   - Les employés **doivent** changer leur mot de passe à la première connexion
+   - Assurez-vous d'avoir une politique de sécurité pour forcer le changement
 
 4. **Résultat de l'Import**:
 ```json

@@ -62,7 +62,7 @@ const importEmployees = async (req, res) => {
         }
 
         // Create default password (should be changed on first login)
-        const defaultPassword = empData.password || 'changeme123';
+        const defaultPassword = empData.password || 'TempPass2025!';
 
         // Create user
         const user = await User.create({
@@ -203,7 +203,7 @@ const getImportTemplate = (req, res) => {
       baseSalary: 3000,
       hourlyRate: 15,
       role: 'employee',
-      password: 'changeme123'
+      password: 'TempPass2025!'
     }
   ];
 
