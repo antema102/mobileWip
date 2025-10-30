@@ -12,6 +12,7 @@ import CheckInOutScreen from '../screens/CheckInOutScreen';
 import AttendanceScreen from '../screens/AttendanceScreen';
 import SalaryScreen from '../screens/SalaryScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import FaceRegistrationScreen from '../screens/FaceRegistrationScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -26,6 +27,9 @@ const AuthStack = () => {
 };
 
 const MainTabs = () => {
+  const {user} = useAuth();
+  const isHRorAdmin = user && (user.role === 'admin' || user.role === 'manager');
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -61,6 +65,13 @@ const MainTabs = () => {
         component={ProfileScreen}
         options={{title: 'Profil'}}
       />
+      {isHRorAdmin && (
+        <Tab.Screen
+          name="FaceRegistration"
+          component={FaceRegistrationScreen}
+          options={{title: 'RH'}}
+        />
+      )}
     </Tab.Navigator>
   );
 };
